@@ -1,0 +1,39 @@
+import ProjectCarousel from "../../Components/PortfolioPages/Projects/ProjectsCarousel";
+
+export default function MobileProjectCard({
+  project,
+  onOpen,
+}) {
+  return (
+    <div className="mobile-project-card">
+
+      <ProjectCarousel
+        images={project.images}
+      />
+
+      <div className="mobile-project-content">
+
+        <h2>{project.title}</h2>
+
+        <p>{project.description}</p>
+
+        <div className="project-tech">
+          {project.technologies.map((technology) => (
+            <span key={technology}>
+              {technology}
+            </span>
+          ))}
+        </div>
+
+        <button
+          className="project-button"
+          onClick={onOpen}
+        >
+          Explore Project →
+        </button>
+
+      </div>
+
+    </div>
+  );
+}

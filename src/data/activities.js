@@ -19,6 +19,10 @@ export const activities = [
       import.meta.env.BASE_URL + "activities/design/14.jpeg",
       import.meta.env.BASE_URL + "activities/design/15.jpeg",
       import.meta.env.BASE_URL + "activities/design/16.jpeg",
+      import.meta.env.BASE_URL + "activities/design/17.jpeg",
+      import.meta.env.BASE_URL + "activities/design/18.jpeg",
+      import.meta.env.BASE_URL + "activities/design/19.jpeg",
+      import.meta.env.BASE_URL + "activities/design/20.jpeg",
     ],
   },
 

@@ -13,6 +13,7 @@ import Overlay from "./Components/PortfolioPages/Overlay/Overlay";
 import Experience from "./Components/PortfolioPages/Experience/Experience";
 import Activities from "./Components/PortfolioPages/Activities/Activities";
 import Projects from "./Components/PortfolioPages/Projects/Projects";
+import MobilePortfolio from "./Mobile/MobilePortfolio";
 
 export default function App() {
   const containerRef = useRef(null);
@@ -147,6 +148,37 @@ export default function App() {
       scrollElement.removeEventListener("scroll", handleScroll);
     };
   }, [scrollElement, currentSection, showLoader]);
+
+  if (isMobile) {
+    return (
+      <div
+        ref={containerRef}
+        style={{
+          width: "100vw",
+          height: "100vh",
+        }}
+      >
+        {showLoader && (
+          <Loader
+            progress={progress}
+            fade={fadeLoader}
+          />
+        )}
+
+        {!showLoader && (
+          <>
+            <MobilePortfolio />
+
+            <BottomNav
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+              isMobile={isMobile}
+            />
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} style={{ width: "100vw", height: "100vh" }}>

@@ -1,0 +1,70 @@
+.mobile-skills {
+  display: flex;
+  flex-direction: column;
+
+  padding: 40px 24px 24px;
+
+  box-sizing: border-box;
+
+  color: var(--text-primary, white);
+}
+
+.skills-content {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+}
+
+.skill-group {
+  margin-bottom: 40px;
+}
+
+.skill-group-title {
+  margin: 0 0 20px;
+
+  font-size: 1.5rem;
+  font-weight: 700;
+
+  color: var(--hero-color, #7c5cff);
+}
+
+.skills-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  column-gap: 24px;
+  row-gap: 28px;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 8px;
+
+  text-align: center;
+}
+
+.skill-icon {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translateX(-120vw) rotate(-720deg);
+  opacity: 0;
+
+  will-change: transform, opacity;
+}
+
+.skill-item span {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}

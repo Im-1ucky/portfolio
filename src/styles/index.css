@@ -8,6 +8,18 @@ body,
   overflow: hidden;
 }
 
+:root {
+  --accent-color: #7c5cff;
+
+  --bg-primary: #0f0f0f;
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.65);
+
+  --accent-soft: rgba(124, 92, 255, 0.08);
+  --accent-border: rgba(124, 92, 255, 0.4);
+}
+
 .info-hotspot-container{
     position:fixed;
 
