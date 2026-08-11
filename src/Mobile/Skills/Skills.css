@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
 
-  padding: 40px 24px 24px;
+  padding: 24px 24px 24px;
 
   box-sizing: border-box;
 
@@ -13,20 +13,51 @@
   display: flex;
   flex-direction: column;
 
+  align-items: flex-start;
+
   width: 100%;
 }
 
+/* Same as About Me section title */
+.mobile-skills .section-title {
+  margin: 0 0 16px;
+
+  color: var(--text-primary, white);
+
+  font-size: 1.5rem;
+  font-weight: 500;
+
+  opacity: 0.8;
+}
+
+/* Slightly larger description */
+.skills-note {
+  margin: 0 0 20px;
+
+  font-size: 1.08rem;
+  line-height: 1.6;
+
+  opacity: 0.85;
+}
+
+/* Languages / Frameworks / Tools */
 .skill-group {
-  margin-bottom: 40px;
+  margin: 0 0 40px;
+  width: 100%;
+}
+
+.skill-group:last-child {
+  margin-bottom: 0;
 }
 
 .skill-group-title {
-  margin: 0 0 20px;
+  margin: 0 0 28px;
 
   font-size: 1.5rem;
-  font-weight: 700;
+  line-height: 1.2;
+  font-weight: 800;
 
-  color: var(--hero-color, #7c5cff);
+  color: var(--accent-color);
 }
 
 .skills-grid {
@@ -41,6 +72,7 @@
 .skill-item {
   display: flex;
   flex-direction: column;
+
   align-items: center;
 
   gap: 8px;

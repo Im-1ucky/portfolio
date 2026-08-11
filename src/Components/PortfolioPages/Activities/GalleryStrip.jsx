@@ -38,7 +38,7 @@ export default function GalleryStrip({
 
       intervalRef.current = setInterval(() => {
         emblaApi.scrollNext();
-      }, 15000);
+      }, 5000);
     }, autoDelay);
 
     return () => {
@@ -55,11 +55,9 @@ export default function GalleryStrip({
     };
 
     emblaApi.on("pointerDown", handleInteraction);
-    emblaApi.on("settle", handleInteraction);
 
     return () => {
       emblaApi.off("pointerDown", handleInteraction);
-      emblaApi.off("settle", handleInteraction);
     };
   }, [emblaApi]);
 

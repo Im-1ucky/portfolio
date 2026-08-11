@@ -1,0 +1,211 @@
+.mobile-contact {
+  display: flex;
+  justify-content: center;
+
+  padding: 40px 24px 120px;
+
+  box-sizing: border-box;
+}
+
+.mobile-contact-card {
+  width: 100%;
+
+  padding: 28px 24px;
+
+  box-sizing: border-box;
+
+  border-radius: 28px;
+}
+
+.mobile-contact-card h1 {
+  margin: 0;
+
+  color: var(--accent-color);
+
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.mobile-contact-description {
+  margin: 24px 0 32px;
+
+  color: var(--text-primary);
+  opacity: 0.75;
+
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Email */
+
+.mobile-contact-email {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  color: var(--text-primary);
+
+  text-decoration: none;
+}
+
+.mobile-contact-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  color: var(--accent-color);
+
+  flex-shrink: 0;
+}
+
+.mobile-contact-email span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-size: 0.85rem;
+
+  opacity: 0.65;
+}
+
+.mobile-contact-email strong {
+  font-size: 0.95rem;
+}
+
+/* Socials */
+
+.mobile-contact-socials {
+  margin-top: 48px;
+}
+
+.mobile-contact-socials h3 {
+  margin: 0 0 16px;
+
+  font-size: 0.9rem;
+
+  letter-spacing: 0.08em;
+
+  opacity: 0.65;
+}
+
+.mobile-contact-social-links {
+  display: flex;
+
+  gap: 12px;
+}
+
+.mobile-contact-social {
+  padding: 12px 20px;
+
+  border-radius: 14px;
+
+  color: var(--text-primary);
+
+  text-decoration: none;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Message */
+
+.mobile-contact-message {
+  margin-top: 52px;
+}
+
+.mobile-contact-message h1 {
+  margin-bottom: 28px;
+}
+
+.mobile-contact-message form {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-contact-message label {
+  margin-bottom: 8px;
+
+  font-size: 0.85rem;
+
+  font-weight: 600;
+
+  opacity: 0.65;
+}
+
+.mobile-contact-message input,
+.mobile-contact-message textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  margin-bottom: 20px;
+
+  padding: 14px 16px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: var(--text-primary);
+
+  font: inherit;
+
+  outline: none;
+}
+
+.mobile-contact-message textarea {
+  resize: vertical;
+
+  min-height: 120px;
+}
+
+.mobile-contact-message input::placeholder,
+.mobile-contact-message textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.mobile-contact-message input:focus,
+.mobile-contact-message textarea:focus {
+  border-color: var(--accent-color);
+}
+
+.project-button,
+.mobile-contact-cv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 12px 16px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.1);
+
+  color: var(--text-primary, white);
+
+  font-size: 0.9rem;
+
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.mobile-contact-cv {
+  margin-top: 16px;
+}

@@ -1,0 +1,134 @@
+import "./MobileContact.css";
+
+export default function MobileContact() {
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const form = new FormData(e.currentTarget);
+
+    const name = form.get("name");
+    const message = form.get("message");
+
+    const subject = `Portfolio Contact — ${name}`;
+
+    const body = `Name: ${name}
+
+Message:
+${message}`;
+
+    const mailto =
+      `mailto:luckymi11lite@gmail.com` +
+      `?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
+
+    window.open(mailto, "_blank");
+  };
+
+  return (
+    <div className="mobile-contact">
+
+      <div className="mobile-contact-card">
+
+        <h1>Let's connect.</h1>
+
+        <p className="mobile-contact-description">
+          Have a project in mind or want to talk tech?
+          Feel free to reach out. I'm always open to new ideas,
+          collaborations, and opportunities.
+        </p>
+
+        {/* Email */}
+        <a
+          href="mailto:luckymi11lite@gmail.com"
+          className="mobile-contact-email"
+        >
+          <div className="mobile-contact-icon">
+            ✉
+          </div>
+
+          <div>
+            <span>Email Address</span>
+            <strong>luckymi11lite@gmail.com</strong>
+          </div>
+        </a>
+
+        {/* Socials */}
+        <div className="mobile-contact-socials">
+
+          <h3>FOLLOW ME</h3>
+
+          <div className="mobile-contact-social-links">
+
+            <a
+              href="https://github.com/Im-1ucky"
+              target="_blank"
+              rel="noreferrer"
+              className="glass mobile-contact-social"
+            >
+              GitHub
+            </a>
+
+            <a
+              href="https://www.linkedin.com/in/lucky-reddy-535811391"
+              target="_blank"
+              rel="noreferrer"
+              className="glass mobile-contact-social"
+            >
+              LinkedIn
+            </a>
+
+          </div>
+
+        </div>
+
+        {/* Message */}
+        <div className="mobile-contact-message">
+
+          <h1>Send a message.</h1>
+
+          <form onSubmit={handleSubmit}>
+
+            <label>NAME</label>
+
+            <input
+              type="text"
+              name="name"
+              placeholder="Your name"
+              required
+            />
+
+            <label>MESSAGE</label>
+
+            <textarea
+              name="message"
+              placeholder="What are we building?"
+              rows="5"
+              required
+            />
+
+            <button
+              type="submit"
+              className="glass project-button"
+            >
+              Send Message →
+            </button>
+
+          </form>
+
+          {/* Download CV */}
+          <a
+            href="/resume.pdf"
+            download
+            className="glass mobile-contact-cv"
+          >
+            Download CV ↓
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}

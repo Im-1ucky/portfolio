@@ -96,7 +96,7 @@ export default function Activities() {
           title={activity.title}
           images={activity.images}
           onImageClick={setSelectedImage}
-          autoDelay={index * 5000}
+          autoDelay={index * 2000}
         />
       ))}
 

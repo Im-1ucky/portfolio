@@ -181,13 +181,25 @@ export default function Skills() {
           Skills
         </p>
 
+        <p className="skills-note">
+          Always learning, always building.
+        </p>
+
         {skillGroups.map((group) => (
           <div
             className="skill-group"
             key={group.title}
           >
             <h2 className="skill-group-title">
-              {group.title}
+              <span
+                className="typing-effect"
+                style={{
+                  "--typing-steps": group.title.length,
+                  "--typing-width": `${group.title.length}ch`,
+                }}
+              >
+                {group.title}
+              </span>
             </h2>
 
             <div className="skills-grid">

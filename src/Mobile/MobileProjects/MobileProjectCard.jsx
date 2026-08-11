@@ -7,9 +7,15 @@ export default function MobileProjectCard({
   return (
     <div className="mobile-project-card">
 
-      <ProjectCarousel
-        images={project.images}
-      />
+      {/* Clicking the images opens the project */}
+      <div
+        className="mobile-project-carousel"
+        onClick={onOpen}
+      >
+        <ProjectCarousel
+          images={project.images}
+        />
+      </div>
 
       <div className="mobile-project-content">
 

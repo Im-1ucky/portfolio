@@ -1,12 +1,8 @@
 import "./MobileProjects.css";
-
-import { useState } from "react";
-
 import { projects } from "../../data/projects";
-
 import MobileProjectCard from "./MobileProjectCard";
-
-import ProjectShowcase from "../../Components/PortfolioPages/Projects/ProjectShowcase";
+import MobileProjectShowcase from "./MobileProjectShowcase";
+import { useState } from "react";
 
 export default function MobileProjects() {
   const [current, setCurrent] = useState(null);
@@ -25,7 +21,7 @@ export default function MobileProjects() {
 
   if (current !== null) {
     return (
-      <ProjectShowcase
+      <MobileProjectShowcase
         project={projects[current]}
         current={current}
         total={projects.length}
@@ -38,21 +34,34 @@ export default function MobileProjects() {
 
   return (
     <section className="mobile-projects">
+      <div className="projects-content">
 
-      <p className="section-title">
-        Projects
-      </p>
+        <p className="section-title">
+          Projects
+        </p>
 
-      <div className="mobile-projects-list">
-        {projects.map((project, index) => (
-          <MobileProjectCard
-            key={project.id}
-            project={project}
-            onOpen={() => setCurrent(index)}
-          />
-        ))}
+
+        <p className="projects-note">
+          A collection of things I've built and explored.
+        </p>
+
+        <div className="projects-list">
+          {projects.map((project) => (
+            <MobileProjectCard
+              key={project.id}
+              project={project}
+              onOpen={() =>
+                setCurrent(
+                  projects.findIndex(
+                    (p) => p.id === project.id
+                  )
+                )
+              }
+            />
+          ))}
+        </div>
+
       </div>
-
     </section>
   );
 }

@@ -33,15 +33,13 @@ export default function About() {
           <p>
             I enjoy building software from the ground up,
             from low level logic and algorithms to modern
-            applications, I love understanding how things work under the
-            hood.
+            applications.
           </p>
 
           <p>
-            I build Android apps, web applications and
-            databases with a focus on clean architecture,
-            performance and user experience. I constantly explore cloud computing and
-            DevOps in my free time.
+            I build Android apps, web applications and databases
+            with a focus on clean architecture, performance and user experience.
+            {/*I also explore cloud computing and DevOps in my free time*/}
           </p>
         </div>
 
