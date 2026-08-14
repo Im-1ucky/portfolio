@@ -1,4 +1,5 @@
 import "./About.css";
+import TypingText from "../../styles/TypingText/TypingText";
 
 const skills = [
   "App Dev",
@@ -17,16 +18,10 @@ export default function About() {
           About Me
         </p>
 
-        <h1 className="about-title">
-          <span
-            className="typing-effect"
-            style={{
-              "--typing-steps": 10,
-              "--typing-width": "9.5ch",
-            }}
-          >
+        <h1>
+          <TypingText>
             Who am I?
-          </span>
+          </TypingText>
         </h1>
 
         <div className="about-text">

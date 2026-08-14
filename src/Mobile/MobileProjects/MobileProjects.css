@@ -57,12 +57,15 @@
   gap: 8px;
 }
 
-.mobile-project-tech span {
+.mobile-project-content .project-tech span {
   padding: 7px 12px;
 
   border-radius: 999px;
 
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+
+  color: var(--text-primary);
 
   font-size: 0.8rem;
 }

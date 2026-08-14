@@ -16,8 +16,6 @@ function Model({ modelRef }) {
       return;
     }
 
-    console.log("Using mobile camera:", phoneCamera);
-
     set({ camera: phoneCamera });
 
     phoneCamera.updateProjectionMatrix();
@@ -30,7 +28,7 @@ function Model({ modelRef }) {
   );
 }
 
-export default function MobileModel() {
+export default function MobileModel({ darkMode }) {
   const modelRef = useRef(null);
 
   return (
@@ -51,7 +49,6 @@ export default function MobileModel() {
           const deltaX = currentX - lastX;
 
           modelRef.current.rotation.y += deltaX * 0.01;
-
           modelRef.current.userData.lastX = currentX;
         }}
         onPointerUp={() => {
@@ -65,6 +62,11 @@ export default function MobileModel() {
           modelRef.current.userData.dragging = false;
         }}
       >
+        <color
+          attach="background"
+          args={[darkMode ? "#111111" : "#f5f5f5"]}
+        />
+
         <ambientLight intensity={1} />
 
         <directionalLight

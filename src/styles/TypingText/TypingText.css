@@ -1,0 +1,28 @@
+.typing-text {
+  color: var(--accent-color);
+
+  /* Allow long titles to wrap */
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.typing-cursor {
+  display: inline-block;
+
+  width: 10px;
+  height: 1em;
+
+  margin-left: 4px;
+
+  vertical-align: -0.15em;
+
+  background: var(--accent-color);
+
+  animation: typing-blink 0.8s step-end infinite;
+}
+
+@keyframes typing-blink {
+  50% {
+    opacity: 0;
+  }
+}

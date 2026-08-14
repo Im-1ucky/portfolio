@@ -1,5 +1,6 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useRef } from "react";
+import TypingText from "../../styles/TypingText/TypingText";
 
 export default function MobileGalleryStrip({
   title,
@@ -39,7 +40,11 @@ export default function MobileGalleryStrip({
     <div className="mobile-gallery-strip">
 
       <div className="mobile-gallery-header">
-        <h2>{title}</h2>
+        <h2>
+          <TypingText key={title}>
+            {title}
+          </TypingText>
+        </h2>
       </div>
 
       <div

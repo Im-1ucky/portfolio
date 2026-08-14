@@ -27,6 +27,31 @@ export default function BottomNav({
   } = usePortfolioScroll();
 
   function goToSection(index) {
+    if (isMobile) {
+      const sectionIds = [
+        "home",
+        "about",
+        "skills",
+        "projects",
+        "experience",
+        "activities",
+        "contact",
+      ];
+
+      const section = document.getElementById(sectionIds[index]);
+
+      if (section) {
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+
+      setExpanded(false);
+      return;
+    }
+
+    // Desktop navigation
     if (!scrollElement) return;
 
     scrollElement.scrollTo({

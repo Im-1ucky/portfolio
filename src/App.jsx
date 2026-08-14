@@ -22,7 +22,9 @@ export default function App() {
     x: 0,
     y: 0,
   });
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return window.innerWidth <= 768;
+  });
   const pageMap = {
     4: "experience",
     3: "projects",
@@ -149,6 +151,13 @@ export default function App() {
     };
   }, [scrollElement, currentSection, showLoader]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      darkMode ? "dark" : "light"
+    );
+  }, [darkMode]);
+
   if (isMobile) {
     return (
       <div
@@ -167,7 +176,7 @@ export default function App() {
 
         {!showLoader && (
           <>
-            <MobilePortfolio />
+            <MobilePortfolio darkMode={darkMode} />
 
             <BottomNav
               darkMode={darkMode}

@@ -21,7 +21,7 @@
 .bottom-nav button {
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-primary);
 
   height: 40px;
   padding: 0 14px;
@@ -47,7 +47,7 @@
 .nav-item {
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-primary);
 
   padding: 10px 20px;
 
@@ -137,7 +137,7 @@
   border: none;
   border-radius: 999px;
 
-  color: white;
+  color: var(--text-primary);
 
   cursor: pointer;
 
@@ -156,7 +156,7 @@
 
   margin: 0 4px;
 
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--border-color);
 
   flex-shrink: 0;
 }

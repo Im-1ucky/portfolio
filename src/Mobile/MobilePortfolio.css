@@ -1,14 +1,12 @@
 .mobile-portfolio {
   width: 100%;
   height: 100vh;
-
   display: flex;
   flex-direction: column;
-
-  background: #0f0f0f;
-
+  background: var(--bg-primary);
+  color: var(--text-primary);
   overflow-y: auto;
   overflow-x: hidden;
-
+  scroll-behavior: smooth;
   box-sizing: border-box;
 }

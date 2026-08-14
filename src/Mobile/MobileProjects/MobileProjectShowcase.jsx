@@ -1,5 +1,6 @@
 import "./MobileProjects.css";
 import ProjectCarousel from "../../Components/PortfolioPages/Projects/ProjectsCarousel";
+import TypingText from "../../styles/TypingText/TypingText";
 
 export default function MobileProjectShowcase({
   project,
@@ -31,7 +32,11 @@ export default function MobileProjectShowcase({
       {/* Project information */}
       <div className="project-showcase-content">
 
-        <h1>{project.title}</h1>
+        <h2>
+          <TypingText key={project.id}>
+            {project.title}
+          </TypingText>
+        </h2>
 
         <h2>Overview</h2>
 

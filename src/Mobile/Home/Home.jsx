@@ -1,7 +1,8 @@
 import "./Home.css";
 import MobileModel from "../MobileModel/MobileModel";
+import TypingText from "../../styles/TypingText/TypingText";
 
-export default function Home() {
+export default function Home({ darkMode }) {
   return (
     <section className="mobile-home">
 
@@ -12,15 +13,9 @@ export default function Home() {
         </p>
 
         <h1 className="hero-name">
-          <span
-            className="typing-effect"
-            style={{
-              "--typing-steps": 10,
-              "--typing-width": "9.5ch",
-            }}
-          >
+          <TypingText>
             I'm Lucky,
-          </span>
+          </TypingText>
         </h1>
 
         <h2 className="section-title">
@@ -29,7 +24,7 @@ export default function Home() {
 
       </div>
 
-      <MobileModel />
+      <MobileModel darkMode={darkMode} />
 
     </section>
   );

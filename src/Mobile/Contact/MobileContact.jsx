@@ -1,17 +1,14 @@
 import "./MobileContact.css";
+import TypingText from "../../styles/TypingText/TypingText";
 
 export default function MobileContact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const form = new FormData(e.currentTarget);
-
     const name = form.get("name");
     const message = form.get("message");
-
     const subject = `Portfolio Contact — ${name}`;
-
     const body = `Name: ${name}
 
 Message:
@@ -30,12 +27,15 @@ ${message}`;
 
       <div className="mobile-contact-card">
 
-        <h1>Let's connect.</h1>
+        <h1>
+          <TypingText key="lets-connect">
+            Let's connect
+          </TypingText>
+        </h1>
 
         <p className="mobile-contact-description">
           Have a project in mind or want to talk tech?
-          Feel free to reach out. I'm always open to new ideas,
-          collaborations, and opportunities.
+          Feel free to reach out.
         </p>
 
         {/* Email */}
@@ -85,7 +85,11 @@ ${message}`;
         {/* Message */}
         <div className="mobile-contact-message">
 
-          <h1>Send a message.</h1>
+          <h1>
+            <TypingText key="send-message">
+              Send a message
+            </TypingText>
+          </h1>
 
           <form onSubmit={handleSubmit}>
 
@@ -122,7 +126,7 @@ ${message}`;
             download
             className="glass mobile-contact-cv"
           >
-            Download CV ↓
+            Download CV
           </a>
 
         </div>

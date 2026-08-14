@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import "./Skills.css";
+import TypingText from "../../styles/TypingText/TypingText";
 
 import {
   SiCplusplus,
@@ -191,15 +192,9 @@ export default function Skills() {
             key={group.title}
           >
             <h2 className="skill-group-title">
-              <span
-                className="typing-effect"
-                style={{
-                  "--typing-steps": group.title.length,
-                  "--typing-width": `${group.title.length}ch`,
-                }}
-              >
+              <TypingText>
                 {group.title}
-              </span>
+              </TypingText>
             </h2>
 
             <div className="skills-grid">

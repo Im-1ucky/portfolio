@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./MobileExperience.css";
-
+import TypingText from "../../styles/TypingText/TypingText";
 import { experiences } from "../../data/experiences";
 
 export default function MobileExperience() {
@@ -39,7 +39,11 @@ export default function MobileExperience() {
       <div className="mobile-experience-content">
 
         <div className="mobile-experience-heading">
-          <h1>{experience.title}</h1>
+          <h1>
+            <TypingText key={experience.id}>
+              {experience.title}
+            </TypingText>
+          </h1>
           <h2>{experience.company}</h2>
         </div>
 
