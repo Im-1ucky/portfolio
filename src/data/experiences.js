@@ -9,7 +9,7 @@ export const experiences = [
 
         image:
             import.meta.env.BASE_URL +
-            "certificates/devit.png",
+            "experience/devit.png",
 
         about: "Worked as part of the DevIT development team on HippocampOS, contributing to responsive frontend UI/UX while collaborating on backend services and database integration. Gained hands on experience with real world development workflows, version control, debugging and Agile team collaboration.",
 
@@ -32,7 +32,7 @@ export const experiences = [
 
         duration: "8 weeks",
 
-        image: import.meta.env.BASE_URL + "certificates/Internpe.png",
+        image: import.meta.env.BASE_URL + "experience/Internpe.png",
 
         about:
             "Gained hands on exposure to designing, training and evaluating machine learning models for real world predictive tasks. Worked with supervised learning techniques including classification, regression, Support Vector Machines (SVM) and predictor models while applying data preprocessing and model evaluation practices.",

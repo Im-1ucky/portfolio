@@ -52,10 +52,9 @@ export const projects = [
     ],
 
     images: [
-      "/projects/payment/1.webp",
-      "/projects/payment/2.webp",
-      "/projects/payment/3.webp",
-      "/projects/payment/4.webp",
+      `${import.meta.env.BASE_URL}projects/payment/1.jpeg`,
+      `${import.meta.env.BASE_URL}projects/payment/2.jpeg`,
+      `${import.meta.env.BASE_URL}projects/payment/3.jpeg`,
     ],
 
     overview:
@@ -89,10 +88,12 @@ export const projects = [
     ],
 
     images: [
-      "/projects/linux/1.webp",
-      "/projects/linux/2.webp",
-      "/projects/linux/3.webp",
-      "/projects/linux/4.webp",
+      `${import.meta.env.BASE_URL}projects/linux/1.png`,
+      `${import.meta.env.BASE_URL}projects/linux/2.png`,
+      `${import.meta.env.BASE_URL}projects/linux/3.png`,
+      `${import.meta.env.BASE_URL}projects/linux/4.png`,
+      `${import.meta.env.BASE_URL}projects/linux/5.png`,
+      `${import.meta.env.BASE_URL}projects/linux/6.png`,
     ],
 
     overview:

@@ -18,7 +18,7 @@ export default function Scene({
       />
 
       <ScrollControls
-        pages={10}
+        pages={50}
         enabled={overlayPage === null}
       >
         <Model
