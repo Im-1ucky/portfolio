@@ -11,20 +11,23 @@ function Model({ cameraRef, targetRef }) {
 
   useEffect(() => {
     const phoneCamera = scene.getObjectByName("CameraPhone");
-    const target = scene.getObjectByName("MobileCamTarget");
 
     if (!phoneCamera) {
       console.error("CameraPhone not found in p2.glb");
       return;
     }
 
-    if (!target) {
-      console.error("MobileCamTarget not found in p2.glb");
-      return;
-    }
-
     cameraRef.current = phoneCamera;
-    targetRef.current = target;
+
+    // Find the center of the actual model
+    const box = new THREE.Box3().setFromObject(scene);
+
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+
+    targetRef.current = center;
+
+    console.log("Camera target:", center);
 
     set({ camera: phoneCamera });
 
@@ -38,8 +41,17 @@ export default function MobileModel({ darkMode }) {
   const cameraRef = useRef(null);
   const targetRef = useRef(null);
 
+  const verticalOffset = useRef(0);
   const orbitAngle = useRef(0);
+
   const startCameraPosition = useRef(null);
+
+  const pointers = useRef(new Map());
+  const lastPinchDistance = useRef(null);
+  const zoomDistance = useRef(null);
+
+  const MIN_CAMERA_Y = -5.0;
+  const MAX_CAMERA_Y = 10;
 
   return (
     <div className="hero-model">
@@ -51,21 +63,140 @@ export default function MobileModel({ darkMode }) {
 
           if (!camera) return;
 
-          camera.userData.dragging = true;
-          camera.userData.lastX = e.clientX;
-          camera.userData.lastY = e.clientY;
+          pointers.current.set(e.pointerId, {
+            x: e.clientX,
+            y: e.clientY,
+          });
 
-          if (!startCameraPosition.current) {
-            startCameraPosition.current =
-              camera.position.clone();
+          // -------------------------
+          // TWO FINGERS → PINCH
+          // -------------------------
+
+          if (pointers.current.size === 2) {
+            const [a, b] = [...pointers.current.values()];
+
+            lastPinchDistance.current = Math.hypot(
+              a.x - b.x,
+              a.y - b.y
+            );
+
+            camera.userData.dragging = false;
+
+            return;
+          }
+
+          // -------------------------
+          // ONE FINGER → ORBIT
+          // -------------------------
+
+          if (pointers.current.size === 1) {
+            camera.userData.dragging = true;
+
+            camera.userData.lastX = e.clientX;
+            camera.userData.lastY = e.clientY;
+
+            if (!startCameraPosition.current) {
+              startCameraPosition.current =
+                camera.position.clone();
+
+              zoomDistance.current =
+                camera.position.distanceTo(targetRef.current);
+            }
           }
         }}
 
         onPointerMove={(e) => {
           const camera = cameraRef.current;
-          const target = targetRef.current;
 
-          if (!camera?.userData.dragging || !target) return;
+          if (!camera) return;
+
+          // Update pointer
+          if (pointers.current.has(e.pointerId)) {
+            pointers.current.set(e.pointerId, {
+              x: e.clientX,
+              y: e.clientY,
+            });
+          }
+
+          // =========================
+          // PINCH ZOOM
+          // =========================
+
+          if (pointers.current.size === 2) {
+            const [a, b] = [...pointers.current.values()];
+
+            const currentDistance = Math.hypot(
+              a.x - b.x,
+              a.y - b.y
+            );
+
+            if (lastPinchDistance.current !== null) {
+              const delta =
+                currentDistance -
+                lastPinchDistance.current;
+
+              const zoomSpeed = 0.05;
+
+              zoomDistance.current -=
+                delta * zoomSpeed;
+
+              // Don't allow negative distance
+              zoomDistance.current = Math.max(
+                0.1,
+                zoomDistance.current
+              );
+
+              const original =
+                startCameraPosition.current;
+
+              const offset = original
+                .clone()
+                .sub(targetRef.current);
+
+              // Horizontal orbit
+              offset.applyAxisAngle(
+                new THREE.Vector3(0, 1, 0),
+                orbitAngle.current
+              );
+
+              // Vertical orbit
+              offset.y += verticalOffset.current;
+
+              // Apply zoom
+              offset.setLength(
+                zoomDistance.current
+              );
+
+              camera.position
+                .copy(targetRef.current)
+                .add(offset);
+
+              camera.position.y =
+                THREE.MathUtils.clamp(
+                  camera.position.y,
+                  MIN_CAMERA_Y,
+                  MAX_CAMERA_Y
+                );
+
+              camera.lookAt(targetRef.current);
+
+              console.log(
+                "Zoom distance:",
+                zoomDistance.current.toFixed(3)
+              );
+            }
+
+            lastPinchDistance.current =
+              currentDistance;
+
+            return;
+          }
+
+          // =========================
+          // ONE-FINGER ORBIT
+          // =========================
+
+          if (!camera.userData.dragging) return;
 
           const deltaX =
             e.clientX - camera.userData.lastX;
@@ -73,30 +204,49 @@ export default function MobileModel({ darkMode }) {
           const deltaY =
             e.clientY - camera.userData.lastY;
 
-          const rotationSpeed = 0.01;
+          // Horizontal
+          orbitAngle.current -=
+            deltaX * 0.02;
 
-          orbitAngle.current -= deltaX * rotationSpeed;
+          // Vertical
+          // Inverted
+          verticalOffset.current +=
+            deltaY * 0.05;
 
-          // Horizontal orbit
-          const original = startCameraPosition.current;
+          const original =
+            startCameraPosition.current;
 
           const offset = original
             .clone()
-            .sub(target.position);
+            .sub(targetRef.current);
 
+          // Horizontal orbit
           offset.applyAxisAngle(
             new THREE.Vector3(0, 1, 0),
             orbitAngle.current
           );
 
-          // Vertical movement around target
-          offset.y -= deltaY * 0.01;
+          // Vertical movement
+          offset.y += verticalOffset.current;
+
+          // Preserve zoom
+          offset.setLength(
+            zoomDistance.current
+          );
 
           camera.position
-            .copy(target.position)
+            .copy(targetRef.current)
             .add(offset);
 
-          camera.lookAt(target.position);
+          // Vertical limits
+          camera.position.y =
+            THREE.MathUtils.clamp(
+              camera.position.y,
+              MIN_CAMERA_Y,
+              MAX_CAMERA_Y
+            );
+
+          camera.lookAt(targetRef.current);
 
           camera.userData.lastX = e.clientX;
           camera.userData.lastY = e.clientY;
@@ -109,15 +259,25 @@ export default function MobileModel({ darkMode }) {
           );
         }}
 
-        onPointerUp={() => {
-          if (cameraRef.current) {
-            cameraRef.current.userData.dragging = false;
+        onPointerUp={(e) => {
+          pointers.current.delete(e.pointerId);
+
+          if (pointers.current.size < 2) {
+            lastPinchDistance.current = null;
+          }
+
+          if (pointers.current.size === 0) {
+            if (cameraRef.current) {
+              cameraRef.current.userData.dragging = false;
+            }
           }
         }}
 
-        onPointerLeave={() => {
-          if (cameraRef.current) {
-            cameraRef.current.userData.dragging = false;
+        onPointerCancel={(e) => {
+          pointers.current.delete(e.pointerId);
+
+          if (pointers.current.size < 2) {
+            lastPinchDistance.current = null;
           }
         }}
       >
@@ -126,7 +286,7 @@ export default function MobileModel({ darkMode }) {
           args={[
             darkMode
               ? "#111111"
-              : "#f5f5f5"
+              : "#f5f5f5",
           ]}
         />
 
