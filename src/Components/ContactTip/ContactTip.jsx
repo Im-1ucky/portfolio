@@ -13,7 +13,7 @@ export default function ContactTip({
       className={
         x !== undefined
           ? "cursor-tip"
-          : "contact-hint glass"
+          : "contact-hint"
       }
       style={
         x !== undefined && y !== undefined

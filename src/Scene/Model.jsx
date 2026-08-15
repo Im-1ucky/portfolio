@@ -23,9 +23,9 @@ export default function Model({
     const github = scene.getObjectByName("GithubHitbox");
     const linkedin = scene.getObjectByName("LinkedinHitbox");
     const email = scene.getObjectByName("MailHitbox");
-    console.log(github);
-    console.log(linkedin);
-    console.log(email);
+    // console.log(github);
+    // console.log(linkedin);
+    // console.log(email);
 
     [github, linkedin, email].forEach((obj) => {
       obj.material = obj.material.clone();
