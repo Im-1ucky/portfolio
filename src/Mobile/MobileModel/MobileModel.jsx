@@ -10,34 +10,63 @@ function Model({ cameraRef, targetRef }) {
   const { set } = useThree();
 
   useEffect(() => {
-    const phoneCamera = scene.getObjectByName("CameraPhone");
+    const phoneCamera =
+      scene.getObjectByName("CameraPhone");
+
+    const target =
+      scene.getObjectByName("MobileCamTarget");
 
     if (!phoneCamera) {
-      console.error("CameraPhone not found in p2.glb");
+      console.error(
+        "CameraPhone not found in p2.glb"
+      );
       return;
     }
 
+    if (!target) {
+      console.error(
+        "MobileCamTarget not found in p2.glb"
+      );
+      return;
+    }
+
+    const mobileHitboxes = [
+      "GithubHitbox",
+      "LinkedinHitbox",
+      "MailHitbox",
+    ];
+
+    mobileHitboxes.forEach((name) => {
+      const hitbox = scene.getObjectByName(name);
+
+      if (!hitbox) return;
+
+      hitbox.traverse((child) => {
+        if (!child.isMesh) return;
+
+        child.visible = false;
+      });
+    });
+
     cameraRef.current = phoneCamera;
-
-    // Find the center of the actual model
-    const box = new THREE.Box3().setFromObject(scene);
-
-    const center = new THREE.Vector3();
-    box.getCenter(center);
-
-    targetRef.current = center;
-
-    console.log("Camera target:", center);
+    targetRef.current = target;
 
     set({ camera: phoneCamera });
 
     phoneCamera.updateProjectionMatrix();
-  }, [scene, set, cameraRef, targetRef]);
+  }, [
+    scene,
+    set,
+    cameraRef,
+    targetRef,
+  ]);
 
   return <primitive object={scene} />;
 }
 
-export default function MobileModel({ darkMode }) {
+export default function MobileModel({
+  darkMode,
+}) {
   const cameraRef = useRef(null);
   const targetRef = useRef(null);
 
@@ -53,6 +82,25 @@ export default function MobileModel({ darkMode }) {
   const MIN_CAMERA_Y = -5.0;
   const MAX_CAMERA_Y = 10;
 
+  const MIN_ZOOM_DISTANCE = 1.5;
+  const MAX_ZOOM_DISTANCE = useRef(null);
+
+  const applyZoom = (distance) => {
+    if (
+      zoomDistance.current === null ||
+      MAX_ZOOM_DISTANCE.current === null
+    ) {
+      return;
+    }
+
+    zoomDistance.current =
+      THREE.MathUtils.clamp(
+        distance,
+        MIN_ZOOM_DISTANCE,
+        MAX_ZOOM_DISTANCE.current
+      );
+  };
+
   return (
     <div className="hero-model">
       <Canvas
@@ -60,62 +108,143 @@ export default function MobileModel({ darkMode }) {
           e.stopPropagation();
 
           const camera = cameraRef.current;
+          const target = targetRef.current;
 
-          if (!camera) return;
+          if (!camera || !target) return;
 
           pointers.current.set(e.pointerId, {
             x: e.clientX,
             y: e.clientY,
           });
 
-          // -------------------------
+          // =========================
           // TWO FINGERS → PINCH
-          // -------------------------
+          // =========================
 
           if (pointers.current.size === 2) {
-            const [a, b] = [...pointers.current.values()];
+            const [a, b] = [
+              ...pointers.current.values(),
+            ];
 
-            lastPinchDistance.current = Math.hypot(
-              a.x - b.x,
-              a.y - b.y
-            );
+            lastPinchDistance.current =
+              Math.hypot(
+                a.x - b.x,
+                a.y - b.y
+              );
 
             camera.userData.dragging = false;
 
             return;
           }
 
-          // -------------------------
+          // =========================
           // ONE FINGER → ORBIT
-          // -------------------------
+          // =========================
 
           if (pointers.current.size === 1) {
             camera.userData.dragging = true;
 
-            camera.userData.lastX = e.clientX;
-            camera.userData.lastY = e.clientY;
+            camera.userData.lastX =
+              e.clientX;
+
+            camera.userData.lastY =
+              e.clientY;
 
             if (!startCameraPosition.current) {
               startCameraPosition.current =
                 camera.position.clone();
 
               zoomDistance.current =
-                camera.position.distanceTo(targetRef.current);
+                camera.position.distanceTo(
+                  target.position
+                );
+
+              MAX_ZOOM_DISTANCE.current =
+                zoomDistance.current;
             }
           }
         }}
 
+        onWheel={(e) => {
+          e.stopPropagation();
+
+          const camera = cameraRef.current;
+          const target = targetRef.current;
+
+          if (
+            !camera ||
+            !target ||
+            zoomDistance.current === null
+          ) {
+            return;
+          }
+
+          const zoomSpeed = 0.05;
+
+          applyZoom(
+            zoomDistance.current +
+            e.deltaY * zoomSpeed
+          );
+
+          const original =
+            startCameraPosition.current;
+
+          const offset = original
+            .clone()
+            .sub(target.position);
+
+          // Preserve current horizontal orbit
+          offset.applyAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            orbitAngle.current
+          );
+
+          // Preserve current vertical orbit
+          offset.y += verticalOffset.current;
+
+          // Apply zoom
+          offset.setLength(
+            zoomDistance.current
+          );
+
+          camera.position
+            .copy(target.position)
+            .add(offset);
+
+          camera.position.y =
+            THREE.MathUtils.clamp(
+              camera.position.y,
+              MIN_CAMERA_Y,
+              MAX_CAMERA_Y
+            );
+
+          camera.lookAt(
+            target.position
+          );
+
+          console.log(
+            "Zoom distance:",
+            zoomDistance.current.toFixed(3)
+          );
+        }}
+
         onPointerMove={(e) => {
           const camera = cameraRef.current;
+          const target = targetRef.current;
 
-          if (!camera) return;
+          if (!camera || !target) return;
 
           // Update pointer
-          if (pointers.current.has(e.pointerId)) {
-            pointers.current.set(e.pointerId, {
-              x: e.clientX,
-              y: e.clientY,
-            });
+          if (pointers.current.has(
+            e.pointerId
+          )) {
+            pointers.current.set(
+              e.pointerId,
+              {
+                x: e.clientX,
+                y: e.clientY,
+              }
+            );
           }
 
           // =========================
@@ -123,27 +252,29 @@ export default function MobileModel({ darkMode }) {
           // =========================
 
           if (pointers.current.size === 2) {
-            const [a, b] = [...pointers.current.values()];
+            const [a, b] = [
+              ...pointers.current.values(),
+            ];
 
-            const currentDistance = Math.hypot(
-              a.x - b.x,
-              a.y - b.y
-            );
+            const currentDistance =
+              Math.hypot(
+                a.x - b.x,
+                a.y - b.y
+              );
 
-            if (lastPinchDistance.current !== null) {
+            if (
+              lastPinchDistance.current !==
+              null
+            ) {
               const delta =
                 currentDistance -
                 lastPinchDistance.current;
 
               const zoomSpeed = 0.05;
 
-              zoomDistance.current -=
-                delta * zoomSpeed;
-
-              // Don't allow negative distance
-              zoomDistance.current = Math.max(
-                0.1,
-                zoomDistance.current
+              applyZoom(
+                zoomDistance.current -
+                delta * zoomSpeed
               );
 
               const original =
@@ -151,24 +282,29 @@ export default function MobileModel({ darkMode }) {
 
               const offset = original
                 .clone()
-                .sub(targetRef.current);
+                .sub(target.position);
 
               // Horizontal orbit
               offset.applyAxisAngle(
-                new THREE.Vector3(0, 1, 0),
+                new THREE.Vector3(
+                  0,
+                  1,
+                  0
+                ),
                 orbitAngle.current
               );
 
               // Vertical orbit
-              offset.y += verticalOffset.current;
+              offset.y +=
+                verticalOffset.current;
 
-              // Apply zoom
+              // Preserve zoom
               offset.setLength(
                 zoomDistance.current
               );
 
               camera.position
-                .copy(targetRef.current)
+                .copy(target.position)
                 .add(offset);
 
               camera.position.y =
@@ -178,7 +314,9 @@ export default function MobileModel({ darkMode }) {
                   MAX_CAMERA_Y
                 );
 
-              camera.lookAt(targetRef.current);
+              camera.lookAt(
+                target.position
+              );
 
               console.log(
                 "Zoom distance:",
@@ -196,20 +334,26 @@ export default function MobileModel({ darkMode }) {
           // ONE-FINGER ORBIT
           // =========================
 
-          if (!camera.userData.dragging) return;
+          if (
+            !camera.userData.dragging
+          ) {
+            return;
+          }
 
           const deltaX =
-            e.clientX - camera.userData.lastX;
+            e.clientX -
+            camera.userData.lastX;
 
           const deltaY =
-            e.clientY - camera.userData.lastY;
+            e.clientY -
+            camera.userData.lastY;
 
           // Horizontal
           orbitAngle.current -=
             deltaX * 0.02;
 
           // Vertical
-          // Inverted
+          // Inverted + sensitive
           verticalOffset.current +=
             deltaY * 0.05;
 
@@ -218,16 +362,21 @@ export default function MobileModel({ darkMode }) {
 
           const offset = original
             .clone()
-            .sub(targetRef.current);
+            .sub(target.position);
 
           // Horizontal orbit
           offset.applyAxisAngle(
-            new THREE.Vector3(0, 1, 0),
+            new THREE.Vector3(
+              0,
+              1,
+              0
+            ),
             orbitAngle.current
           );
 
           // Vertical movement
-          offset.y += verticalOffset.current;
+          offset.y +=
+            verticalOffset.current;
 
           // Preserve zoom
           offset.setLength(
@@ -235,7 +384,7 @@ export default function MobileModel({ darkMode }) {
           );
 
           camera.position
-            .copy(targetRef.current)
+            .copy(target.position)
             .add(offset);
 
           // Vertical limits
@@ -246,10 +395,15 @@ export default function MobileModel({ darkMode }) {
               MAX_CAMERA_Y
             );
 
-          camera.lookAt(targetRef.current);
+          camera.lookAt(
+            target.position
+          );
 
-          camera.userData.lastX = e.clientX;
-          camera.userData.lastY = e.clientY;
+          camera.userData.lastX =
+            e.clientX;
+
+          camera.userData.lastY =
+            e.clientY;
 
           console.log(
             "Camera:",
@@ -260,24 +414,37 @@ export default function MobileModel({ darkMode }) {
         }}
 
         onPointerUp={(e) => {
-          pointers.current.delete(e.pointerId);
+          pointers.current.delete(
+            e.pointerId
+          );
 
-          if (pointers.current.size < 2) {
-            lastPinchDistance.current = null;
+          if (
+            pointers.current.size < 2
+          ) {
+            lastPinchDistance.current =
+              null;
           }
 
-          if (pointers.current.size === 0) {
+          if (
+            pointers.current.size === 0
+          ) {
             if (cameraRef.current) {
-              cameraRef.current.userData.dragging = false;
+              cameraRef.current.userData.dragging =
+                false;
             }
           }
         }}
 
         onPointerCancel={(e) => {
-          pointers.current.delete(e.pointerId);
+          pointers.current.delete(
+            e.pointerId
+          );
 
-          if (pointers.current.size < 2) {
-            lastPinchDistance.current = null;
+          if (
+            pointers.current.size < 2
+          ) {
+            lastPinchDistance.current =
+              null;
           }
         }}
       >

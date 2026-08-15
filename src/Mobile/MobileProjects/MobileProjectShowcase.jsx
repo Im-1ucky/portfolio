@@ -16,7 +16,7 @@ export default function MobileProjectShowcase({
     <div className="mobile-project-showcase">
 
       <button
-        className="credential-button"
+        className="glass credential-button"
         onClick={onClose}
       >
         Back to Projects
@@ -46,7 +46,10 @@ export default function MobileProjectShowcase({
 
         <div className="project-tech">
           {project.technologies.map((technology) => (
-            <span key={technology}>
+            <span
+              key={technology}
+              className="glass"
+            >
               {technology}
             </span>
           ))}
@@ -67,7 +70,7 @@ export default function MobileProjectShowcase({
             href={project.github}
             target="_blank"
             rel="noreferrer"
-            className="project-button"
+            className="glass project-button"
           >
             Read more →
           </a>

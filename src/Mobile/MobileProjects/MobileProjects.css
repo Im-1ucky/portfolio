@@ -80,7 +80,7 @@
 
   background: rgba(255, 255, 255, 0.1);
 
-  color: var(--text-primary, white);
+  color: white;
 
   font-size: 0.9rem;
 
@@ -154,8 +154,6 @@
   padding-left: 20px;
 
   line-height: 1.6;
-
-  opacity: .85;
 }
 
 .experience-navigation {
@@ -168,15 +166,20 @@
   margin-top: 40px;
 }
 
-.nav-arrow {
+.mobile-project-showcase .nav-arrow {
   border: none;
   background: transparent;
 
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
 
   font-size: 1.4rem;
-
   cursor: pointer;
+}
+
+.mobile-project-showcase .experience-counter {
+  color: var(--text-primary);
+  font-size: .9rem;
+  opacity: .7;
 }
 
 .experience-counter {
@@ -184,14 +187,12 @@
   opacity: .7;
 }
 
-/* Mobile project showcase spacing */
+
 .mobile-project-showcase .project-features {
   margin: 0;
   padding-left: 20px;
-
   line-height: 1.6;
-
-  opacity: .85;
+  opacity: 0.85;
 }
 
 .mobile-project-showcase .project-button {
@@ -200,4 +201,21 @@
 
 .mobile-project-content .project-tech {
   margin: 0;
+}
+
+.project-showcase-content .project-tech span {
+  color: var(--text-primary);
+}
+
+.project-showcase-content .project-features {
+  color: var(--text-primary);
+  opacity: 0.85;
+}
+
+.project-showcase-content .project-features li {
+  color: var(--text-primary);
+}
+
+.mobile-project-showcase .experience-counter {
+  color: var(--text-primary);
 }

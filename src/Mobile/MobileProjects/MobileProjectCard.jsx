@@ -37,7 +37,7 @@ export default function MobileProjectCard({
         </div>
 
         <button
-          className="project-button"
+          className="glass project-button"
           onClick={onOpen}
         >
           Explore Project →

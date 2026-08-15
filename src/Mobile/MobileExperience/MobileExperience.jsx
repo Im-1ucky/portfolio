@@ -108,7 +108,7 @@ export default function MobileExperience() {
             href={experience.credential}
             target="_blank"
             rel="noreferrer"
-            className="project-button"
+            className="glass project-button"
           >
             View Credential →
           </a>

@@ -273,11 +273,11 @@
 }
 
 .project-showcase-left .project-preview-image {
-    height: auto;           /* let it breathe */
-    max-height: 710px;      /* cap the height */
+    height: auto;
+    max-height: 710px;
     width: 100%;
-    object-fit: contain;    /* show the full image, no cropping */
-    background: rgba(255, 255, 255, 0.03); /* subtle bg for letterboxing */
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .project-showcase-right p{
@@ -316,4 +316,14 @@
     font-size:1.05rem;
 
     line-height:1.7;
+}
+
+@media (min-width: 769px) {
+  .project-button {
+    color: white !important;
+  }
+
+  .project-showcase-page .project-button {
+    color: white !important;
+  }
 }
