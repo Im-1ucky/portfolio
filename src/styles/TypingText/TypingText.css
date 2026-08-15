@@ -1,7 +1,5 @@
 .typing-text {
   color: var(--accent-color);
-
-  /* Allow long titles to wrap */
   white-space: normal;
   overflow-wrap: break-word;
 }
