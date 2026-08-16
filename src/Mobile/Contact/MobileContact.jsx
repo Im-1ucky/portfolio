@@ -22,6 +22,29 @@ ${message}`;
     window.open(mailto, "_blank");
   };
 
+  const handleDownloadCV = () => {
+    const url = `${import.meta.env.BASE_URL}resume.pdf`;
+
+    // Open PDF in a new tab
+    window.open(url, "_blank", "noopener,noreferrer");
+
+    // Trigger download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "resume.pdf";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
+  <button
+    type="button"
+    onClick={handleDownloadCV}
+    className="glass mobile-contact-cv"
+  >
+    Download CV
+  </button>
+
   return (
     <div className="mobile-contact">
 
@@ -121,13 +144,13 @@ ${message}`;
           </form>
 
           {/* Download CV */}
-          <a
-            href="/resume.pdf"
-            download
+          <button
+            type="button"
+            onClick={handleDownloadCV}
             className="glass mobile-contact-cv"
           >
             Download CV
-          </a>
+          </button>
 
         </div>
 
