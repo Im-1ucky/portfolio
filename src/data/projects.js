@@ -94,6 +94,7 @@ export const projects = [
       `${import.meta.env.BASE_URL}projects/linux/4.png`,
       `${import.meta.env.BASE_URL}projects/linux/5.png`,
       `${import.meta.env.BASE_URL}projects/linux/6.png`,
+      `${import.meta.env.BASE_URL}projects/linux/7.png`,
     ],
 
     overview:
