@@ -78,6 +78,9 @@ export default function MobileModel({
   const pointers = useRef(new Map());
   const lastPinchDistance = useRef(null);
   const zoomDistance = useRef(null);
+  const lastTap = useRef(0);
+  const tapTimeout = useRef(null);
+  const multiTouchGesture = useRef(false);
 
   const MIN_CAMERA_Y = -5.0;
   const MAX_CAMERA_Y = 10;
@@ -101,6 +104,62 @@ export default function MobileModel({
       );
   };
 
+  const toggleDoubleTapZoom = () => {
+    const camera = cameraRef.current;
+    const target = targetRef.current;
+
+    if (
+      !camera ||
+      !target ||
+      zoomDistance.current === null ||
+      MAX_ZOOM_DISTANCE.current === null ||
+      !startCameraPosition.current
+    ) {
+      return;
+    }
+
+    const isAtMax =
+      Math.abs(
+        zoomDistance.current -
+        MAX_ZOOM_DISTANCE.current
+      ) < 0.01;
+
+    // At max → zoom out to min
+    // Anywhere else → zoom in to max
+    zoomDistance.current = isAtMax
+      ? MIN_ZOOM_DISTANCE
+      : MAX_ZOOM_DISTANCE.current;
+
+    const offset = startCameraPosition.current
+      .clone()
+      .sub(target.position);
+
+    // Keep current horizontal orbit
+    offset.applyAxisAngle(
+      new THREE.Vector3(0, 1, 0),
+      orbitAngle.current
+    );
+
+    // Keep current vertical position
+    offset.y += verticalOffset.current;
+
+    // Apply new zoom
+    offset.setLength(zoomDistance.current);
+
+    camera.position
+      .copy(target.position)
+      .add(offset);
+
+    camera.position.y =
+      THREE.MathUtils.clamp(
+        camera.position.y,
+        MIN_CAMERA_Y,
+        MAX_CAMERA_Y
+      );
+
+    camera.lookAt(target.position);
+  };
+
   return (
     <div className="hero-model">
       <Canvas
@@ -112,6 +171,7 @@ export default function MobileModel({
 
           if (!camera || !target) return;
 
+          // Add pointer FIRST
           pointers.current.set(e.pointerId, {
             x: e.clientX,
             y: e.clientY,
@@ -121,7 +181,13 @@ export default function MobileModel({
           // TWO FINGERS → PINCH
           // =========================
 
-          if (pointers.current.size === 2) {
+          if (pointers.current.size >= 2) {
+            // Mark this interaction as multi-touch
+            multiTouchGesture.current = true;
+
+            // Cancel any pending double tap
+            lastTap.current = 0;
+
             const [a, b] = [
               ...pointers.current.values(),
             ];
@@ -138,30 +204,46 @@ export default function MobileModel({
           }
 
           // =========================
+          // ONE FINGER → DOUBLE TAP
+          // =========================
+
+          // Only allow double tap if this has NOT
+          // become a multi-touch gesture
+          if (!multiTouchGesture.current) {
+            const now = Date.now();
+            const DOUBLE_TAP_DELAY = 300;
+
+            if (now - lastTap.current < DOUBLE_TAP_DELAY) {
+              toggleDoubleTapZoom();
+
+              lastTap.current = 0;
+
+              return;
+            }
+
+            lastTap.current = now;
+          }
+
+          // =========================
           // ONE FINGER → ORBIT
           // =========================
 
-          if (pointers.current.size === 1) {
-            camera.userData.dragging = true;
+          camera.userData.dragging = true;
 
-            camera.userData.lastX =
-              e.clientX;
+          camera.userData.lastX = e.clientX;
+          camera.userData.lastY = e.clientY;
 
-            camera.userData.lastY =
-              e.clientY;
+          if (!startCameraPosition.current) {
+            startCameraPosition.current =
+              camera.position.clone();
 
-            if (!startCameraPosition.current) {
-              startCameraPosition.current =
-                camera.position.clone();
+            zoomDistance.current =
+              camera.position.distanceTo(
+                target.position
+              );
 
-              zoomDistance.current =
-                camera.position.distanceTo(
-                  target.position
-                );
-
-              MAX_ZOOM_DISTANCE.current =
-                zoomDistance.current;
-            }
+            MAX_ZOOM_DISTANCE.current =
+              zoomDistance.current;
           }
         }}
 
@@ -414,23 +496,17 @@ export default function MobileModel({
         }}
 
         onPointerUp={(e) => {
-          pointers.current.delete(
-            e.pointerId
-          );
+          pointers.current.delete(e.pointerId);
 
-          if (
-            pointers.current.size < 2
-          ) {
-            lastPinchDistance.current =
-              null;
+          if (pointers.current.size < 2) {
+            lastPinchDistance.current = null;
           }
 
-          if (
-            pointers.current.size === 0
-          ) {
+          if (pointers.current.size === 0) {
+            multiTouchGesture.current = false;
+
             if (cameraRef.current) {
-              cameraRef.current.userData.dragging =
-                false;
+              cameraRef.current.userData.dragging = false;
             }
           }
         }}
