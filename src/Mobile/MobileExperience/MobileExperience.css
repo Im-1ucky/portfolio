@@ -9,6 +9,9 @@
   color: var(--text-primary);
 }
 
+
+/* Intro */
+
 .mobile-experience-intro h1 {
   margin: 0;
 
@@ -53,23 +56,45 @@
 }
 
 
-/* Certificate */
+/* Certificate carousel */
 
 .mobile-experience-certificate {
   width: 100%;
 
   margin-top: 24px;
 
-  border-radius: 24px;
-
   overflow: hidden;
+
+  border-radius: 24px;
 }
 
-.mobile-experience-certificate img {
+.mobile-experience-certificate-container {
+  display: flex;
+
+  touch-action: pan-y;
+
+  /* Compensates for the slide gap */
+  margin-left: -16px;
+}
+
+.mobile-experience-certificate-slide {
+  flex: 0 0 100%;
+
+  min-width: 0;
+
+  /* The gap between certificates */
+  padding-left: 16px;
+
+  box-sizing: border-box;
+}
+
+.mobile-experience-certificate-slide img {
   display: block;
 
   width: 100%;
   height: auto;
+
+  border-radius: 24px;
 }
 
 
@@ -133,12 +158,15 @@
 
 .mobile-experience-duration {
   margin: 20px 0;
+
   font-size: 0.95rem;
+
   opacity: 0.8;
 }
 
 .mobile-experience-skill-list {
   display: flex;
+
   flex-wrap: wrap;
 
   gap: 10px;
@@ -146,23 +174,32 @@
 
 .mobile-experience-skill {
   padding: 8px 14px;
+
   border-radius: 999px;
 
   color: var(--text-primary);
+
   font-size: 0.85rem;
+
   white-space: nowrap;
 }
+
+
+/* Credential button */
 
 .mobile-experience-credential {
   display: inline-block;
 
   margin-top: 28px;
+
   padding: 8px 16px;
 
   border-radius: 999px;
 
   color: var(--text-primary);
+
   text-decoration: none;
+
   font-size: 0.85rem;
 }
 
