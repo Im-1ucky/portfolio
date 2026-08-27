@@ -129,7 +129,7 @@ ${message}`;
 
             <textarea
               name="message"
-              placeholder="What are we building?"
+              placeholder="What would you like to discuss?"
               rows="5"
               required
             />

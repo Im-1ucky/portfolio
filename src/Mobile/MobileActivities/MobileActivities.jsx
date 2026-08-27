@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+
 import "./MobileActivities.css";
 
 import { activities } from "../../data/activities";
@@ -7,21 +9,52 @@ import MobileGalleryStrip from "./MobileGalleryStrip";
 export default function MobileActivities() {
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const [viewerEmblaRef, viewerEmblaApi] = useEmblaCarousel({
+    loop: true,
+  });
+
+  // Keep Embla and selected image index in sync
+  useEffect(() => {
+    if (!viewerEmblaApi) return;
+
+    const onSelect = () => {
+      const index = viewerEmblaApi.selectedScrollSnap();
+
+      setSelectedImage((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          index,
+        };
+      });
+    };
+
+    viewerEmblaApi.on("select", onSelect);
+
+    return () => {
+      viewerEmblaApi.off("select", onSelect);
+    };
+  }, [viewerEmblaApi]);
+
+
+  // When opening the viewer, go to the clicked image
+  useEffect(() => {
+    if (!viewerEmblaApi || !selectedImage) return;
+
+    viewerEmblaApi.reInit();
+    viewerEmblaApi.scrollTo(selectedImage.index, true);
+  }, [
+    viewerEmblaApi,
+    selectedImage?.title,
+  ]);
+
   const previousImage = () => {
-    setSelectedImage((prev) => ({
-      ...prev,
-      index:
-        prev.index === 0
-          ? prev.images.length - 1
-          : prev.index - 1,
-    }));
+    viewerEmblaApi?.scrollPrev();
   };
 
   const nextImage = () => {
-    setSelectedImage((prev) => ({
-      ...prev,
-      index: (prev.index + 1) % prev.images.length,
-    }));
+    viewerEmblaApi?.scrollNext();
   };
 
   if (selectedImage) {
@@ -41,14 +74,29 @@ export default function MobileActivities() {
             {selectedImage.title}
           </h2>
 
-          <div className="mobile-activities-viewer-frame">
-            <img
-              src={
-                selectedImage.images[selectedImage.index]
-              }
-              alt=""
-              className="mobile-activities-viewer-image"
-            />
+          {/* Swipeable viewer */}
+          <div
+            className="mobile-activities-viewer-embla"
+            ref={viewerEmblaRef}
+          >
+            <div className="mobile-activities-viewer-container">
+
+              {selectedImage.images.map((image, index) => (
+                <div
+                  className="mobile-activities-viewer-slide"
+                  key={index}
+                >
+                  <div className="mobile-activities-viewer-frame">
+                    <img
+                      src={image}
+                      alt=""
+                      className="mobile-activities-viewer-image"
+                    />
+                  </div>
+                </div>
+              ))}
+
+            </div>
           </div>
 
         </div>

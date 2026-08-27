@@ -5,7 +5,6 @@ import { usePortfolioScroll } from "../Context/ScrollContext";
 const modelPath = import.meta.env.BASE_URL + "3dmodels/f2.glb";
 
 export default function Model({
-  setOverlayPage,
   setCursorLabel,
 }) {
   const { scene, animations } = useGLTF(modelPath);

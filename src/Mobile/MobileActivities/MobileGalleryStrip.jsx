@@ -1,5 +1,5 @@
 import useEmblaCarousel from "embla-carousel-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import TypingText from "../../styles/TypingText/TypingText";
 
 export default function MobileGalleryStrip({
@@ -17,24 +17,41 @@ export default function MobileGalleryStrip({
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  useEffect(() => {
+  const stopAutoPlay = useCallback(() => {
+    clearTimeout(timeoutRef.current);
+    clearInterval(intervalRef.current);
+
+    timeoutRef.current = null;
+    intervalRef.current = null;
+  }, []);
+
+  const startAutoPlay = useCallback(() => {
     if (!emblaApi) return;
 
-    // Wait for this strip's staggered start time
-    timeoutRef.current = setTimeout(() => {
+    stopAutoPlay();
 
-      // Move once every 5 seconds
+    // Start a fresh 5-second countdown
+    timeoutRef.current = setTimeout(() => {
       intervalRef.current = setInterval(() => {
         emblaApi.scrollNext();
       }, 5000);
+    }, 5000);
+  }, [emblaApi, stopAutoPlay]);
 
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    // Initial staggered start
+    timeoutRef.current = setTimeout(() => {
+      intervalRef.current = setInterval(() => {
+        emblaApi.scrollNext();
+      }, 5000);
     }, autoDelay);
 
     return () => {
-      clearTimeout(timeoutRef.current);
-      clearInterval(intervalRef.current);
+      stopAutoPlay();
     };
-  }, [emblaApi, autoDelay]);
+  }, [emblaApi, autoDelay, stopAutoPlay]);
 
   return (
     <div className="mobile-gallery-strip">
@@ -50,6 +67,10 @@ export default function MobileGalleryStrip({
       <div
         className="mobile-gallery-embla"
         ref={emblaRef}
+        onTouchStart={stopAutoPlay}
+        onTouchEnd={startAutoPlay}
+        onMouseDown={stopAutoPlay}
+        onMouseUp={startAutoPlay}
       >
         <div className="mobile-gallery-container">
 

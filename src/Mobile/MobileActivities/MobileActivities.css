@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
 
-  padding: 24px 24px 24px;
+  padding: 24px;
 
   box-sizing: border-box;
 
@@ -46,6 +46,7 @@
 
 .mobile-gallery-embla {
   width: 100%;
+
   overflow: hidden;
 
   border-radius: 24px;
@@ -54,20 +55,14 @@
 .mobile-gallery-container {
   display: flex;
 
-  /* Creates spacing between slides */
-  margin-left: -16px;
-
   touch-action: pan-y;
 }
 
 .mobile-gallery-slide {
-  flex: 0 0 100%;
+  flex: 0 0 100%;              /* ← CHANGE to 100% */
+  padding-right: 16px;         /* ← ADD */
+  box-sizing: border-box;      /* ← ADD (critical) */
   min-width: 0;
-
-  /* Gap between images */
-  padding-left: 16px;
-
-  box-sizing: border-box;
 }
 
 .mobile-gallery-slide img {
@@ -104,6 +99,7 @@
 
   cursor: pointer;
 }
+
 
 /* Viewer */
 
@@ -148,6 +144,28 @@
   color: var(--accent-color);
 }
 
+
+/* Viewer Embla */
+
+.mobile-activities-viewer-embla {
+  width: 100%;
+
+  overflow: hidden;
+
+  touch-action: pan-y;
+}
+
+.mobile-activities-viewer-container {
+  display: flex;
+}
+
+.mobile-activities-viewer-slide {
+  flex: 0 0 100%;
+  padding-right: 16px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
 .mobile-activities-viewer-frame {
   width: 100%;
 
@@ -159,12 +177,16 @@
   display: block;
 
   width: 100%;
+
   max-height: 65vh;
 
   object-fit: contain;
 
   border-radius: 20px;
 }
+
+
+/* Viewer Navigation */
 
 .mobile-activities-viewer-navigation {
   display: flex;
@@ -190,5 +212,6 @@
 
 .mobile-activities-counter {
   font-size: 0.9rem;
+
   opacity: 0.7;
 }

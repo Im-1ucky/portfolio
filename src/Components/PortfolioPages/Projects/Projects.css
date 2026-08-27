@@ -219,25 +219,36 @@
 }
 
 /* ─── Carousel ─── */
+
 .project-embla {
+    width: 100%;
     overflow: hidden;
 }
 
 .project-embla-container {
     display: flex;
+
+    margin-left: -16px;
+
+    touch-action: pan-y;
 }
 
 .project-embla-slide {
     flex: 0 0 100%;
+    min-width: 0;
+
+    padding-left: 16px;
+
+    box-sizing: border-box;
 }
 
 .project-preview-image {
     width: 100%;
     height: 260px;
+
     object-fit: cover;
     display: block;
 }
-
 .project-showcase{
     display:flex;
     gap:64px;

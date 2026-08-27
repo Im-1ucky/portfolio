@@ -79,7 +79,6 @@ export default function MobileModel({
   const lastPinchDistance = useRef(null);
   const zoomDistance = useRef(null);
   const lastTap = useRef(0);
-  const tapTimeout = useRef(null);
   const multiTouchGesture = useRef(false);
 
   const MIN_CAMERA_Y = -5.0;

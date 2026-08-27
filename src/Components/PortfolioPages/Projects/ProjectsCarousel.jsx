@@ -1,5 +1,5 @@
 import useEmblaCarousel from "embla-carousel-react";
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import "./Projects.css";
 
 export default function ProjectCarousel({ images = [] }) {
@@ -8,20 +8,43 @@ export default function ProjectCarousel({ images = [] }) {
     align: "start",
   });
 
+  const intervalRef = useRef(null);
+
+  const startAutoPlay = useCallback(() => {
+    if (!emblaApi) return;
+
+    clearInterval(intervalRef.current);
+
+    intervalRef.current = setInterval(() => {
+      emblaApi.scrollNext();
+    }, 4000);
+  }, [emblaApi]);
+
+  const stopAutoPlay = useCallback(() => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  }, []);
+
   useEffect(() => {
     if (!emblaApi) return;
 
-    const interval = setInterval(() => {
-      emblaApi.scrollNext();
-    }, 4000);
+    startAutoPlay();
 
-    return () => clearInterval(interval);
-  }, [emblaApi]);
+    return () => {
+      stopAutoPlay();
+    };
+  }, [emblaApi, startAutoPlay, stopAutoPlay]);
 
   return (
-    <div className="project-embla" ref={emblaRef}>
+    <div
+      className="project-embla"
+      ref={emblaRef}
+      onTouchStart={stopAutoPlay}
+      onTouchEnd={startAutoPlay}
+      onMouseDown={stopAutoPlay}
+      onMouseUp={startAutoPlay}
+    >
       <div className="project-embla-container">
-
         {images.map((image, index) => (
           <div
             className="project-embla-slide"
@@ -34,7 +57,6 @@ export default function ProjectCarousel({ images = [] }) {
             />
           </div>
         ))}
-
       </div>
     </div>
   );

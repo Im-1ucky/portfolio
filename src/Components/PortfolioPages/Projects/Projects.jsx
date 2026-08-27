@@ -2,7 +2,7 @@ import "./Projects.css";
 import { projects } from "../../../data/projects";
 import ProjectCard from "./ProjectCard";
 import ProjectShowcase from "./ProjectShowcase";
-import { useState, useEffect } from "react";
+import useState from "react";
 
 export default function Projects() {
   const [current, setCurrent] = useState(null);
