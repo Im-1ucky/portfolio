@@ -53,11 +53,21 @@
 
 .mobile-gallery-container {
   display: flex;
+
+  /* Creates spacing between slides */
+  margin-left: -16px;
+
+  touch-action: pan-y;
 }
 
 .mobile-gallery-slide {
   flex: 0 0 100%;
   min-width: 0;
+
+  /* Gap between images */
+  padding-left: 16px;
+
+  box-sizing: border-box;
 }
 
 .mobile-gallery-slide img {
