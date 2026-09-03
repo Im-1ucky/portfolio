@@ -23,7 +23,7 @@ ${message}`;
   };
 
   const handleDownloadCV = () => {
-    const url = `${import.meta.env.BASE_URL}resume.pdf`;
+    const url = `${import.meta.env.BASE_URL}Lucky_Reddy_Resume.pdf`;
 
     // Open PDF in a new tab
     window.open(url, "_blank", "noopener,noreferrer");
