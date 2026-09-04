@@ -5,7 +5,6 @@ const skills = [
   "App Dev",
   "Web Dev",
   "Database Management",
-  "Cloud",
   "DevOps",
 ];
 
