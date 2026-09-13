@@ -7,7 +7,6 @@ import {
   SiPython,
   SiKotlin,
   SiJavascript,
-  SiDart,
   SiMysql,
   SiPostgresql,
   SiFlutter,
@@ -22,6 +21,7 @@ import {
 } from "react-icons/si";
 
 import { FaJava } from "react-icons/fa";
+import { DiGo } from "react-icons/di";
 
 const skillGroups = [
   {
@@ -31,7 +31,7 @@ const skillGroups = [
       { name: "Python", icon: SiPython, color: "#3776AB" },
       { name: "Kotlin", icon: SiKotlin, color: "#7F52FF" },
       { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
-      { name: "Dart", icon: SiDart, color: "#0175C2" },
+      { name: "Go", icon: DiGo, color: "#00ADD8" },
       { name: "Java", icon: FaJava, color: "#ED8B00" },
     ],
   },
@@ -50,7 +50,7 @@ const skillGroups = [
   {
     title: "Tools",
     skills: [
-      { name: "Linux", icon: SiLinux, color: "#FCC624" },
+      { name: "Linux", icon: SiLinux, color: "#000000" },
       { name: "Git/GitHub", icon: SiGithub, color: "#FFFFFF" },
       { name: "Neovim", icon: SiNeovim, color: "#57A143" },
       { name: "Arch Linux", icon: SiArchlinux, color: "#1793D1" },
