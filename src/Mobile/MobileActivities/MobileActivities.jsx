@@ -1,162 +1,178 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { X } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 
 import "./MobileActivities.css";
-
 import { activities } from "../../data/activities";
 import MobileGalleryStrip from "./MobileGalleryStrip";
 
-export default function MobileActivities() {
-  const [selectedImage, setSelectedImage] = useState(null);
+function MobileActivitiesViewer({ selectedImage, onClose }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      loop: false,
+      align: "center",
+      containScroll: "trimSnaps",
+    },
+    [
+      WheelGesturesPlugin({
+        forceWheelAxis: "x",
+      }),
+    ]
+  );
 
-  const [viewerEmblaRef, viewerEmblaApi] = useEmblaCarousel({
-    loop: true,
-  });
+  const currentIndex = selectedImage.index;
 
-  // Keep Embla and selected image index in sync
+  // Open at the image that was clicked.
   useEffect(() => {
-    if (!viewerEmblaApi) return;
+    if (!emblaApi) return;
 
-    const onSelect = () => {
-      const index = viewerEmblaApi.selectedScrollSnap();
+    emblaApi.scrollTo(selectedImage.index, true);
+  }, [emblaApi, selectedImage.title, selectedImage.index]);
 
-      setSelectedImage((prev) => {
-        if (!prev) return prev;
+  // Sync the image counter with swipe navigation.
+  useEffect(() => {
+    if (!emblaApi) return;
 
-        return {
-          ...prev,
-          index,
-        };
-      });
+    const updateIndex = () => {
+      selectedImage.setIndex(emblaApi.selectedScrollSnap());
     };
 
-    viewerEmblaApi.on("select", onSelect);
+    emblaApi.on("select", updateIndex);
+    updateIndex();
 
     return () => {
-      viewerEmblaApi.off("select", onSelect);
+      emblaApi.off("select", updateIndex);
     };
-  }, [viewerEmblaApi]);
+  }, [emblaApi, selectedImage.setIndex]);
 
-
-  // When opening the viewer, go to the clicked image
+  // Keyboard navigation.
   useEffect(() => {
-    if (!viewerEmblaApi || !selectedImage) return;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      } else if (event.key === "ArrowLeft") {
+        emblaApi?.scrollPrev();
+      } else if (event.key === "ArrowRight") {
+        emblaApi?.scrollNext();
+      }
+    };
 
-    viewerEmblaApi.reInit();
-    viewerEmblaApi.scrollTo(selectedImage.index, true);
-  }, [
-    viewerEmblaApi,
-    selectedImage?.title,
-  ]);
+    document.addEventListener("keydown", handleKeyDown);
 
-  const previousImage = () => {
-    viewerEmblaApi?.scrollPrev();
-  };
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [emblaApi, onClose]);
 
-  const nextImage = () => {
-    viewerEmblaApi?.scrollNext();
-  };
+  // Prevent the page behind the viewer from scrolling.
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
-  if (selectedImage) {
-    return (
-      <div className="mobile-activities-viewer">
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
 
-        <button
-          className="glass mobile-activities-back"
-          onClick={() => setSelectedImage(null)}
+  return (
+    <div
+      className="mobile-activities-viewer"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${selectedImage.title} gallery`}
+      onClick={onClose}
+    >
+      <button
+        type="button"
+        className="mobile-activities-close"
+        onClick={onClose}
+        aria-label="Close image viewer"
+      >
+        <X size={22} strokeWidth={1.8} />
+      </button>
+
+      <div
+        className="mobile-activities-viewer-content"
+        onClick={(event) => event.stopPropagation()}
+      >
+
+        <div
+          className="mobile-activities-viewer-embla"
+          ref={emblaRef}
         >
-          Back to Gallery
-        </button>
-
-        <div className="mobile-activities-viewer-content">
-
-          <h2 className="mobile-activities-viewer-title">
-            {selectedImage.title}
-          </h2>
-
-          {/* Swipeable viewer */}
-          <div
-            className="mobile-activities-viewer-embla"
-            ref={viewerEmblaRef}
-          >
-            <div className="mobile-activities-viewer-container">
-
-              {selectedImage.images.map((image, index) => (
-                <div
-                  className="mobile-activities-viewer-slide"
-                  key={index}
-                >
-                  <div className="mobile-activities-viewer-frame">
-                    <img
-                      src={image}
-                      alt=""
-                      className="mobile-activities-viewer-image"
-                    />
-                  </div>
+          <div className="mobile-activities-viewer-container">
+            {selectedImage.images.map((image, index) => (
+              <div
+                className="mobile-activities-viewer-slide"
+                key={`${image}-${index}`}
+              >
+                <div className="mobile-activities-viewer-frame">
+                  <img
+                    src={image}
+                    alt={`${selectedImage.title} ${index + 1}`}
+                    className="mobile-activities-viewer-image"
+                    draggable="false"
+                  />
                 </div>
-              ))}
-
-            </div>
+              </div>
+            ))}
           </div>
-
         </div>
-
-        <div className="mobile-activities-viewer-navigation">
-
-          <button
-            className="mobile-activities-arrow"
-            onClick={previousImage}
-          >
-            ❮
-          </button>
-
-          <span className="mobile-activities-counter">
-            {selectedImage.index + 1} /{" "}
-            {selectedImage.images.length}
-          </span>
-
-          <button
-            className="mobile-activities-arrow"
-            onClick={nextImage}
-          >
-            ❯
-          </button>
-
-        </div>
-
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+export default function MobileActivities() {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const openViewer = useCallback(({ title, images, index }) => {
+    setCurrentIndex(index);
+    setSelectedImage({ title, images });
+  }, []);
+
+  const closeViewer = useCallback(() => {
+    setSelectedImage(null);
+  }, []);
+
+  const viewerData = selectedImage
+    ? {
+        ...selectedImage,
+        index: currentIndex,
+        setIndex: setCurrentIndex,
+      }
+    : null;
 
   return (
     <section className="mobile-activities">
-
       <div className="mobile-activities-intro">
-
-        <p className="section-title">
-          Activities
-        </p>
+        <p className="section-title">Activities</p>
 
         <p className="mobile-activities-description">
           A collection of moments beyond academics.
         </p>
-
       </div>
 
       <div className="mobile-activities-content">
-
         {activities.map((activity, index) => (
           <MobileGalleryStrip
             key={activity.id}
             title={activity.title}
             images={activity.images}
-            onImageClick={setSelectedImage}
+            onImageClick={openViewer}
             autoDelay={index * 2000}
           />
         ))}
-
       </div>
 
+      {viewerData && (
+        <MobileActivitiesViewer
+          selectedImage={viewerData}
+          onClose={closeViewer}
+        />
+      )}
     </section>
   );
 }
